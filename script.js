@@ -8,13 +8,14 @@ function getCurrentTimestamp() {
 
 async function connectWallet() {
     try {
-        const wallet = await plug.wallet.connect();
-        currentUser = wallet.address;
+        const { address } = await window.plug.requestAccount();
+        currentUser = address;
 
         document.getElementById('signInContainer').style.display = 'none';
         document.getElementById('chatContainer').style.display = 'block';
     } catch (error) {
         console.error("Failed to connect wallet:", error);
+        alert("Connection failed. Please check your Plug Wallet and try again.");
     }
 }
 
