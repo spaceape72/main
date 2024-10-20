@@ -1,4 +1,10 @@
 let currentUser;
+let currentUserId;
+
+// Generate a random user number
+function generateRandomUserId() {
+    return Math.floor(Math.random() * 1000);
+}
 
 // Get the current timestamp
 function getCurrentTimestamp() {
@@ -6,21 +12,21 @@ function getCurrentTimestamp() {
     return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-async function connectWallet() {
-    try {
-        const { address } = await window.plug.requestAccount();
-        currentUser = address;
-
+// Join the chat
+document.getElementById('joinButton').addEventListener('click', function() {
+    const usernameInput = document.getElementById('usernameInput').value.trim();
+    if (usernameInput) {
+        currentUser = usernameInput;
+        currentUserId = generateRandomUserId();
+        
         document.getElementById('signInContainer').style.display = 'none';
         document.getElementById('chatContainer').style.display = 'block';
-    } catch (error) {
-        console.error("Failed to connect wallet:", error);
-        alert("Connection failed. Please check your Plug Wallet and try again.");
+    } else {
+        alert('Please enter a valid username.');
     }
-}
+});
 
-document.getElementById('connectButton').addEventListener('click', connectWallet);
-
+// Send message
 document.getElementById('sendButton').addEventListener('click', function() {
     const input = document.getElementById('messageInput');
     const messageText = input.value.trim();
@@ -30,7 +36,7 @@ document.getElementById('sendButton').addEventListener('click', function() {
 
         const messageElement = document.createElement('div');
         messageElement.classList.add('message');
-        messageElement.textContent = `${currentUser} [${timestamp}]: ${messageText}`;
+        messageElement.textContent = `${currentUser} (User ${currentUserId}) [${timestamp}]: ${messageText}`;
 
         const messagesContainer = document.getElementById('messages');
         messagesContainer.appendChild(messageElement);
